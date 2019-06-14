@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService {
@@ -33,6 +35,14 @@ public class UserService {
         }
         if (StringUtils.isBlank(password)) {
             map.put("msg", "密码不能为空");
+            return map;
+        }
+//        判断用户名是否为邮箱名
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$");
+        Matcher matcher = pattern.matcher(username);
+        boolean isNameRight = matcher.matches();
+        if (!isNameRight) {
+            map.put("msg", "请使用邮箱名为用户名");
             return map;
         }
 
@@ -95,8 +105,8 @@ public class UserService {
         return loginTicket.getTicket();
     }
 
-    public void logout(String ticket){
-        loginTicketDAO.updateStatus(ticket,1);
+    public void logout(String ticket) {
+        loginTicketDAO.updateStatus(ticket, 1);
     }
 
     public User getUser(int id) {

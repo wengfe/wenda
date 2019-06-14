@@ -9,11 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +32,18 @@ public class HomeController {
     }
 
     @RequestMapping(path = {"/", "/index"}, method = {RequestMethod.GET})
-    public String index(Model model, HttpSession httpSession) {
+    public String index(Model model, HttpServletRequest request) {
         model.addAttribute("vos", getQuestions(0,0,10));
         return "index";
+    }
+
+    @RequestMapping(path = {"/admin"}, method = {RequestMethod.GET})
+    @ResponseBody
+    public String admin(@RequestParam("key") String key) {
+        if ("admin".equals(key)) {
+            return "hello admin";
+        }
+        throw  new IllegalArgumentException("参数不对");
     }
 
     private List<ViewObject> getQuestions(int userId, int offset, int limit){

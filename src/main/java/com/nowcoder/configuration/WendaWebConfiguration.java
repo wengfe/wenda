@@ -1,5 +1,6 @@
 package com.nowcoder.configuration;
 
+import com.nowcoder.interceptor.IPInterceptor;
 import com.nowcoder.interceptor.LoginRequredInterceptor;
 import com.nowcoder.interceptor.PassportInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +20,18 @@ public class WendaWebConfiguration extends WebMvcConfigurerAdapter {
     @Autowired
     LoginRequredInterceptor loginRequredInterceptor;
 
+    @Autowired
+    IPInterceptor ipInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 //        注册拦截器
         registry.addInterceptor(passportInterceptor);
 //        添加拦截器拦截条件
         registry.addInterceptor(loginRequredInterceptor).addPathPatterns("/user/*");
+
+        registry.addInterceptor(ipInterceptor).addPathPatterns("/admin*");
+
         super.addInterceptors(registry);
     }
 }
