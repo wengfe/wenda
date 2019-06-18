@@ -2,16 +2,16 @@ package com.nowcoder.controller;
 
 import com.nowcoder.model.HostHolder;
 import com.nowcoder.model.Question;
+import com.nowcoder.model.User;
 import com.nowcoder.service.QuestionService;
+import com.nowcoder.service.UserService;
 import com.nowcoder.util.WendaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -24,6 +24,9 @@ public class QuestionController {
 
     @Autowired
     HostHolder hostHolder;
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping(value = "/question/add", method = {RequestMethod.POST})
     @ResponseBody
@@ -48,5 +51,14 @@ public class QuestionController {
             logger.error("提问失败", e.getMessage());
         }
         return WendaUtil.getJSONString(1,"提问失败");
+    }
+
+    @RequestMapping(value = "/question/{qid}", method = RequestMethod.GET)
+    public String QuestionDetail(Model model, @PathVariable("qid") int qid){
+        Question question = questionService.selectById(qid);
+        User user = userService.getUser(question.getUserId());
+        model.addAttribute("question",question);
+        model.addAttribute("user", user);
+        return "detail";
     }
 }
