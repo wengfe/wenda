@@ -92,6 +92,10 @@ public class UserService {
         return map;
     }
 
+    public User selectByName(String name){
+        return userDAO.selectByName(name);
+    }
+
     public String addLoginTicket(int userId) {
         LoginTicket loginTicket = new LoginTicket();
         loginTicket.setUserId(userId);
