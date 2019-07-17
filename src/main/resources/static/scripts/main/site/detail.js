@@ -1,6 +1,5 @@
 (function (window, undefined) {
-    var Action = Base.getClass('main.util.Action');
-    var Business = Base.getClass('main.util.Business');
+
 
     Base.ready({
         initialize: fInitialize,
@@ -11,6 +10,10 @@
         }
     });
 
+    var Action = Base.getClass('main.util.Action');
+    var Business = Base.getClass('main.util.Business');
+    console.log(Action)
+    // debugger
     function fInitialize() {
         var that = this;
         // 点击关注问题

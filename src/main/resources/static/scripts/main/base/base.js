@@ -134,12 +134,15 @@
         try {
             var sNamespace = sClassName ? (sPackage + '.' + sClassName) : sPackage;
             var aName = sNamespace.split('.');
+            console.log(aName)
             var oParent = window;
 
             for (var i = 0, l = aName.length; i < l; i++) {
                 var sName = aName[i];
                 if (i + 1 === l) {
+                    console.log(oParent[sName])
                     Class = oParent[sName];
+                    // windows.Action
                 } else {
                     oParent = oParent[sName];
                 }

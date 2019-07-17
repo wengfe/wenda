@@ -22,7 +22,7 @@ public interface MessageDAO {
                                         @Param("offset") int offset,
                                         @Param("limit") int limit);
 
-//    SELECT	*, count( id ) AS id FROM | ( SELECT * FROM message where from_id = userId or to_id = userId ORDER BY created_date DESC LIMIT 0, 100 ) tt GROUP BY conversation_id ORDER BY created_date DESC;
+//    SELECT	*, count( id ) AS id FROM  ( SELECT * FROM message where from_id = userId or to_id = userId ORDER BY created_date DESC LIMIT 0, 100 ) tt GROUP BY conversation_id ORDER BY created_date DESC;
     @Select({"select ", INSERT_FIELDS, ", count(id) as id from ( select ", SELECT_FIELDS, " from ", TABLE_NAME, "  where from_id=#{userId} or to_id=#{userId} ORDER BY created_date DESC LIMIT 0, 100 ) tt GROUP BY conversation_id ORDER BY created_date DESC limit #{offset}, #{limit}"})
     List<Message> getConversationList(@Param("userId") int userId,
                                        @Param("offset") int offset,
