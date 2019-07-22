@@ -28,7 +28,7 @@ public class MailSender implements InitializingBean {
                                         String template, Map<String, Object> model) {
         try {
             String nick = MimeUtility.encodeText("牛客网实战");
-            InternetAddress from = new InternetAddress(nick + "<wengfe@126.com>");
+            InternetAddress from = new InternetAddress(nick + "<xxx@126.com>");
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
             String result = VelocityEngineUtils
@@ -49,8 +49,8 @@ public class MailSender implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         mailSender = new JavaMailSenderImpl();
-        mailSender.setUsername("wengfe@126.com");
-        mailSender.setPassword("SendByJava2019");
+        mailSender.setUsername("xxx@126.com");
+        mailSender.setPassword("xxx");
         mailSender.setHost("smtp.126.com");
 //        mailSender.setHost("smtp.exmail.qq.com");
 //        mailSender.setHost("smtp.qq.com");
