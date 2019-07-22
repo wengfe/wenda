@@ -26,9 +26,9 @@ public class UserService {
     LoginTicketDAO loginTicketDAO;
 
     //    注册服务
-    public Map<String, String> register(String username, String password) {
+    public Map<String, Object> register(String username, String password) {
 //        构建 map 方便存放注册异常信息
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, Object> map = new HashMap<String, Object>();
         if (StringUtils.isBlank(username)) {
             map.put("msg", "用户名不能为空");
             return map;
@@ -66,8 +66,8 @@ public class UserService {
         return map;
     }
 
-    public Map<String, String> login(String username, String password) {
-        Map<String, String> map = new HashMap<String, String>();
+    public Map<String, Object> login(String username, String password) {
+        Map<String, Object> map = new HashMap<String, Object>();
         if (StringUtils.isBlank(username)) {
             map.put("msg", "用户名不能为空");
             return map;
@@ -89,6 +89,7 @@ public class UserService {
 
         String ticket = addLoginTicket(user.getId());
         map.put("ticket", ticket);
+        map.put("userId", user.getId());
         return map;
     }
 

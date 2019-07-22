@@ -1,5 +1,8 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProduce;
+import com.nowcoder.async.EventType;
 import com.nowcoder.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -24,6 +27,9 @@ public class LoginController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    EventProduce eventProduce;
+
     @RequestMapping(path = {"/reg/"}, method = {RequestMethod.POST})
     public String reg(Model model,
                       @RequestParam("username") String username,
@@ -32,9 +38,9 @@ public class LoginController {
                       HttpServletResponse response) {
         try {
 //        调用 UserService 的 注册方法
-            Map<String, String> map = userService.register(username, password);
+            Map<String, Object> map = userService.register(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket", map.get("ticket"));
+                Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
                 response.addCookie(cookie);
                 if (StringUtils.isNotBlank(next)){
@@ -60,11 +66,19 @@ public class LoginController {
                         HttpServletResponse response) {
         try {
 //        调用 UserService 的 登录方法
-            Map<String, String> map = userService.login(username, password);
+            Map<String, Object> map = userService.login(username, password);
             if (map.containsKey("ticket")) {
-                Cookie cookie = new Cookie("ticket", map.get("ticket"));
+                Cookie cookie = new Cookie("ticket", map.get("ticket").toString());
                 cookie.setPath("/");
+                if (rememberme) {
+                    cookie.setMaxAge(3600*24*5);
+                }
                 response.addCookie(cookie);
+
+                eventProduce.fireEvent(new EventModel(EventType.LOGIN)
+                        .setExt("username", username).setExt("email", "214952026@qq.com")
+                        .setActorId((int)map.get("userId")));
+
                 if (StringUtils.isNotBlank(next)){
                     return "redirect:" + next;
                 }

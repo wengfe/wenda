@@ -30,6 +30,10 @@ public class CommentService {
         return commentDAO.getCommentCount(entityId, entityType);
     }
 
+    public Comment getCommentById(int commentId){
+        return commentDAO.getCommentById(commentId);
+    }
+
     public boolean deleteComment(int commentId) {
         return commentDAO.updateCommentStatus(1, commentId) > 0;
     }

@@ -1,7 +1,12 @@
 package com.nowcoder.controller;
 
+import com.nowcoder.async.EventModel;
+import com.nowcoder.async.EventProduce;
+import com.nowcoder.async.EventType;
+import com.nowcoder.model.Comment;
 import com.nowcoder.model.EntityType;
 import com.nowcoder.model.HostHolder;
+import com.nowcoder.service.CommentService;
 import com.nowcoder.service.LikeService;
 import com.nowcoder.util.WendaUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +24,11 @@ public class LikeController {
     @Autowired
     HostHolder hostHolder;
 
+    @Autowired
+    EventProduce eventProduce;
+
+    @Autowired
+    CommentService commentService;
 
     @RequestMapping(value = {"/like"},method = {RequestMethod.POST})
     @ResponseBody
@@ -26,6 +36,14 @@ public class LikeController {
         if (hostHolder.getUser() == null){
             return WendaUtil.getJSONString(999);
         }
+
+
+        Comment comment = commentService.getCommentById(commentId);
+//        链式调用传参, 异步通知用户点赞信息
+        eventProduce.fireEvent(new EventModel(EventType.LIKE)
+                .setActorId(hostHolder.getUser().getId()).setEntityId(commentId)
+                .setEntityType(EntityType.ENTITY_COMMENT).setEnetityOwnerId(comment.getUserId())
+                .setExt("questionId", String.valueOf(comment.getEntityId())));
 
         long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, commentId);
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
