@@ -12,7 +12,7 @@ public class WendaUtil {
     public static int ANONYMOUS_USERID = 3;
     public static int SYSTEM_USERID = 4;
 
-    public static String getJSONString(int code, String msg) {
+    public static String getJSONString(int code, Object msg) {
         JSONObject json = new JSONObject();
         json.put("code", code);
         json.put("msg", msg);
