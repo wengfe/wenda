@@ -39,13 +39,20 @@ public class LikeController {
 
 
         Comment comment = commentService.getCommentById(commentId);
+        int likeStatus = likeService.getLikeStatus(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, commentId);
+        long likeCount;
+//        双击赞同 = 取消
+        if (likeStatus <= 0){
 //        链式调用传参, 异步通知用户点赞信息
-        eventProduce.fireEvent(new EventModel(EventType.LIKE)
-                .setActorId(hostHolder.getUser().getId()).setEntityId(commentId)
-                .setEntityType(EntityType.ENTITY_COMMENT).setEnetityOwnerId(comment.getUserId())
-                .setExt("questionId", String.valueOf(comment.getEntityId())));
+            eventProduce.fireEvent(new EventModel(EventType.LIKE)
+                    .setActorId(hostHolder.getUser().getId()).setEntityId(commentId)
+                    .setEntityType(EntityType.ENTITY_COMMENT).setEnetityOwnerId(comment.getUserId())
+                    .setExt("questionId", String.valueOf(comment.getEntityId())));
 
-        long likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, commentId);
+            likeCount = likeService.like(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, commentId);
+        }else {
+            likeCount = likeService.disLike(hostHolder.getUser().getId(), EntityType.ENTITY_COMMENT, commentId);
+        }
         return WendaUtil.getJSONString(0, String.valueOf(likeCount));
     }
 

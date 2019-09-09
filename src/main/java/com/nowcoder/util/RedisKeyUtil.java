@@ -10,6 +10,9 @@ public class RedisKeyUtil {
 //    关注对象
     private static String BIZ_FOLLOWEE = "FOLLOWEE";
 
+//    时间线
+    private static String BIZ_TIMELINE = "TIMELINE";
+
     public static String getLikeKey(int entityType, int entityId){
         return BIZ_LIKE + SPLIT + String.valueOf(entityType) + SPLIT + String.valueOf(entityId);
     }
@@ -29,5 +32,9 @@ public class RedisKeyUtil {
     // 某个实体的粉丝key
     public static String getBizFollowerKey(int entityType, int entityId){
         return BIZ_FOLLOWEE + SPLIT + String.valueOf(entityType) + SPLIT + String.valueOf(entityId);
+    }
+
+    public static String getTimeLineKey(int userId){
+        return BIZ_TIMELINE + SPLIT + String.valueOf(userId);
     }
 }
